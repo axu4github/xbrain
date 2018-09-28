@@ -1,0 +1,3 @@
+graft xbarin/static
+graft xbarin/templates
+global-exclude *.pyc
