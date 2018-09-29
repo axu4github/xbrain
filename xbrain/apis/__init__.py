@@ -1,11 +1,23 @@
 # coding=utf-8
 
-from flask import Blueprint
-from xbrain.similarity import Similarity
+from xbrain.similarity import Word2VectorSimilarity
+from xbrain.apis.responses import SuccessResponse, FailedResponse
+from flask import Blueprint, request
+
 
 apis = Blueprint("apis", __name__, url_prefix="/apis")
 
 
 @apis.route("/similar", methods=("POST", ))
 def similar():
-    return Similarity().most_similar()
+    try:
+        corpus = request.form["corpus"]
+        words = request.form["words"].split(",")
+        is_segment = bool(request.form["is_segment"])
+        similars = Word2VectorSimilarity(
+            corpus, is_segment=is_segment, min_count=1).most_similar(words)
+        response = SuccessResponse(context=similars)
+    except Exception as e:
+        response = FailedResponse(msg=str(e))
+
+    return str(response)

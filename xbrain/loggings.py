@@ -8,6 +8,6 @@ import logging
 
 class LoggableMixin(object):
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         fileConfig(current_app.config["LOG_CONF_FILEPATH"])
         self.logger = logging.getLogger()

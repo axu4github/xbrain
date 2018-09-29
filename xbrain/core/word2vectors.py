@@ -3,19 +3,9 @@
 from xbrain.loggings import LoggableMixin
 from xbrain.core.participles import JiebaParticiple
 from xbrain.utils import Utils
-from xbrain.doraemon import Doraemon
 
 import gensim
 import os
-
-
-class Sentences(object):
-
-    def __init__(self, resources):
-        self.resources = resources
-
-    def __iter__(self):
-        return Utils.get_resources_contents(self.resources).split()
 
 
 class Word2Vectors(LoggableMixin):
