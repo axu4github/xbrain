@@ -11,64 +11,92 @@ import jieba
 class Participles(LoggableMixin):
     """ 分词 """
 
-    def __init__(self,
-                 business_words_dir=None,
-                 stop_words_dir=None,
-                 *args, **kwargs):
-        super(Participles, self).__init__(*args, **kwargs)
+    def __init__(self, business_word_dics=None, stop_word_dics=None):
+        super(Participles, self).__init__()
+        self.business_vocabularies = self.generate_vocabularies(
+            business_word_dics)
+        self.stopword_vocabularies = self.generate_vocabularies(stop_word_dics)
 
-        self.business_words = self.init_dic_words(business_words_dir)
-        self.stop_words = self.init_dic_words(stop_words_dir)
+    def generate_vocabularies(self, dicts=None):
+        """ 生成词库 """
+        vocabularies = defaultdict(int)
+        if dicts is not None:
+            for word in Utils.get_resources_contents(dicts):
+                if word.strip() != "":
+                    vocabularies[word.strip()] += 1
 
-    def init_dic_words(self, words_dir):
-        dic_words = defaultdict(int)
-        if words_dir is not None:
-            for word in Utils.get_files_contents(words_dir):
-                dic_words[word] += 1
+        return vocabularies
 
-        return dic_words
+    def set_business_vocabularies(self, business_word_dics=None):
+        self.business_vocabularies = self.generate_vocabularies(
+            business_word_dics)
 
-    def append_business_words(self, business_words):
+    def set_stopword_vocabularies(self, stop_word_dics=None):
+        self.stopword_vocabularies = self.generate_vocabularies(stop_word_dics)
+
+    def add_business_vocabularies(self):
+        """ 添加业务词库 """
         pass
 
-    def filter_stop_words(self, sentences):
-        return filter(lambda word: word not in self.stop_words, sentences)
+    def filter_stopword_vocabularies(self, sentence):
+        """ 过滤停用词 """
+        def filter_word(word):
+            return word.strip() not in self.stopword_vocabularies
 
-    def perform_cut(self, sentences):
+        return filter(filter_word, sentence)
+
+    def perform_segment(self, sentences):
+        """ 执行句子分词算法 """
         pass
 
-    def perform_cut_file(self, _file, output_file=None):
-        cuted = []
-        for line in Doraemon.get_file_contents(_file):
-            cuted.append(" ".join(
-                self.filter_stop_words(self.perform_cut(line))))
+    def perform_segment_file(self, input_filepath, output_filepath=None):
+        """ 执行文件分词算法 """
+        result = []
+        for sentence in Doraemon.get_file_contents(input_filepath):
+            if "" != sentence.strip():
+                result.append(self.filter_segmented(sentence))
 
-        if output_file is not None:
-            Doraemon.put_file_contents(output_file, cuted)
+        if output_filepath is not None:
+            Doraemon.put_file_contents(output_filepath, result)
 
-        return cuted
+        return result
 
-    def cut(self, sentences=None, corpus=None):
-        cuted = []
-        self.append_business_words(self.business_words.keys())
+    def filter_segmented(self, sentence):
+        """ 过滤分词后的结果 """
+        return " ".join(self.filter_stopword_vocabularies(
+            self.perform_segment(sentence.strip())))
+
+    def segment(self, sentences=None, corpus=None, output_file=None):
+        """ 分词 """
+        result = []
+        self.add_business_vocabularies()
         if sentences is not None:
             if not isinstance(sentences, list):
                 sentences = [sentences]
+                self.logger.debug(
+                    "sentences => [{0}]".format(", ".join(sentences)))
 
             for sentence in sentences:
-                cuted.append(" ".join(
-                    self.filter_stop_words(self.perform_cut(sentence))))
+                if "" != sentence.strip():
+                    result.append(self.filter_segmented(sentence))
+
+            if output_file is not None:
+                Doraemon.put_file_contents(result)
+                result = [output_file]
         elif corpus is not None:
             if not isinstance(corpus, list):
                 corpus = [corpus]
+                self.logger.debug(
+                    "corpus => [{0}]".format(", ".join(corpus)))
 
-            for corpus_dir in corpus:
-                for _file in Doraemon.get_files(corpus_dir):
-                    output_file = "{0}.cuted".format(_file)
-                    self.perform_cut_file(_file, output_file)
-                    cuted.append(output_file)
+            for _corpus in corpus:
+                for _file in Doraemon.get_files(_corpus):
+                    output_file = "{0}.seged".format(_file)
+                    self.perform_segment_file(_file, output_file)
+                    result.append(output_file)
 
-        return cuted
+        self.logger.debug("result => [{0}]".format(", ".join(result)))
+        return result
 
 
 class JiebaParticiple(Participles):
@@ -77,9 +105,9 @@ class JiebaParticiple(Participles):
     def __init__(self, *args, **kwargs):
         super(JiebaParticiple, self).__init__(*args, **kwargs)
 
-    def append_business_words(self, business_words):
-        for word in business_words:
+    def add_business_vocabularies(self):
+        for word in self.business_vocabularies.keys():
             jieba.add_word(word)
 
-    def perform_cut(self, sentences):
-        return jieba.cut(sentences.strip(), cut_all=False)
+    def perform_segment(self, sentence):
+        return jieba.cut(sentence.strip(), cut_all=False)

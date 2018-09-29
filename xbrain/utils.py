@@ -7,11 +7,12 @@ class Utils(object):
     """ 工具类 """
 
     @staticmethod
-    def get_files_contents(_dirs):
-        if not isinstance(_dirs, list):
-            _dirs = [_dirs]
+    def get_resources_contents(resources):
+        """ 获取所有文件或者目录下文件的内容 """
+        if not isinstance(resources, list):
+            resources = [resources]
 
-        for _dir in _dirs:
-            for _file in Doraemon.get_files(_dir):
-                for line in Doraemon.get_file_contents(_file):
-                    yield line.strip()
+        for resource in resources:
+            for _file in Doraemon.get_files(resource):
+                for row in Doraemon.get_file_contents(_file):
+                    yield row.strip()

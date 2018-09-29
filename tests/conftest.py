@@ -1,8 +1,14 @@
 # coding=utf-8
 
-from xbrain import create_app
-
+import os
+import sys
 import pytest
+
+try:
+    from xbrain import create_app
+except ModuleNotFoundError:
+    sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+    from xbrain import create_app
 
 
 @pytest.fixture
