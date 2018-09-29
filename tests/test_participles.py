@@ -3,11 +3,13 @@
 from xbrain.core.participles import JiebaParticiple
 from xbrain.doraemon import Doraemon
 from xbrain.configs import Config
+from xbrain.utils import Utils
 
 import os
 
 
 class TestJiebaParticiple(object):
+    """ 测试结巴分词器 """
 
     @classmethod
     def setup_class(cls):
@@ -65,7 +67,9 @@ class TestJiebaParticiple(object):
 
     def test_jieba_participle_corpus_file(self, app):
         with app.app_context():
-            output_file = "{0}.seged".format(self.corpus)
+            output_file = Utils.get_segmented_filepath(self.corpus)
+            if os.path.isfile(output_file):
+                os.unlink(output_file)
 
             assert not os.path.isfile(output_file)
 
@@ -87,7 +91,9 @@ class TestJiebaParticiple(object):
 
     def test_jieba_participle_corpus_dir(self, app):
         with app.app_context():
-            output_file = "{0}.seged".format(self.corpus)
+            output_file = Utils.get_segmented_filepath(self.corpus)
+            if os.path.isfile(output_file):
+                os.unlink(output_file)
 
             assert not os.path.isfile(output_file)
 

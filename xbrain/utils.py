@@ -16,3 +16,7 @@ class Utils(object):
             for _file in Doraemon.get_files(resource):
                 for row in Doraemon.get_file_contents(_file):
                     yield row.strip()
+
+    @staticmethod
+    def get_segmented_filepath(filepath):
+        return "{0}.seged".format(filepath)

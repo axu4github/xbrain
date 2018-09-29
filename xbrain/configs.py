@@ -16,6 +16,7 @@ class Config(object):
     TEST_RESOURCES_DIR = os.path.join(TEST_DIR, "resources")
     TEST_CORPUS_DIR = os.path.join(TEST_RESOURCES_DIR, "corpus")
     TEST_DICS_DIR = os.path.join(TEST_RESOURCES_DIR, "dics")
+    TEST_MODELS_DIR = os.path.join(TEST_RESOURCES_DIR, "models")
 
     DEBUG = False
     TESTING = False

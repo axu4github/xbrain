@@ -91,7 +91,7 @@ class Participles(LoggableMixin):
 
             for _corpus in corpus:
                 for _file in Doraemon.get_files(_corpus):
-                    output_file = "{0}.seged".format(_file)
+                    output_file = Utils.get_segmented_filepath(_file)
                     self.perform_segment_file(_file, output_file)
                     result.append(output_file)
 
