@@ -16,8 +16,8 @@ def similar():
         is_segment = bool(request.form["is_segment"])
         similars = Word2VectorSimilarity(
             corpus, is_segment=is_segment, min_count=1).most_similar(words)
-        response = SuccessResponse(context=similars)
+        response = SuccessResponse(similars)
     except Exception as e:
-        response = FailedResponse(msg=str(e))
+        response = FailedResponse(str(e))
 
     return str(response)

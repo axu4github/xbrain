@@ -27,12 +27,13 @@ class Response(LoggableMixin):
 
 class SuccessResponse(Response):
 
-    def __init__(self, message=None, status=SUCCESS, *args, **kwargs):
+    def __init__(self, context, message=None, status=SUCCESS, *args, **kwargs):
         super(SuccessResponse, self).__init__(
-            message=None, status=SUCCESS, *args, **kwargs)
+            message=message, status=status, context=context, *args, **kwargs)
 
 
 class FailedResponse(Response):
-    def __init__(self, message=None, status=FAILED, *args, **kwargs):
-        super(SuccessResponse, self).__init__(
-            message=None, status=SUCCESS, *args, **kwargs)
+
+    def __init__(self, message, status=FAILED, context=None, *args, **kwargs):
+        super(FailedResponse, self).__init__(
+            message=message, status=status, context=context, *args, **kwargs)
