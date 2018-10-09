@@ -1,3 +1,3 @@
 #!/bin/sh
 
-pytest -v -s --disable-pytest-warnings
+pytest -v --disable-pytest-warnings
