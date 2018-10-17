@@ -1,4 +1,4 @@
-## 1. 升级Python3
+## 1. 升级python
 
 ```bash
 # 检查现有python版本
@@ -225,3 +225,60 @@ Python 3.6.6
 > python -V
 Python 2.6.6
 ```
+
+## 3. 安装项目依赖组件
+
+```bash
+# 进入虚拟化环境
+> source ~/.venvs/xbrain/bin/activate
+
+# 检查
+(xbrain) > python -V
+Python 3.6.6
+
+# 更新组件版本
+(xbrain) > cd /opt/xbrain
+(xbrain) > pip install -f packages/ -r requirements.txt
+[...]
+```
+
+## 4. 启动项目
+
+```bash
+# 删除缓存
+(xbrain) > rm -rf /opt/xbrain/tests/__pycache__
+
+# 运行测试
+(xbrain) > sbin/run_tests.sh
+============================================== test session starts ==============================================
+platform linux -- Python 3.6.6, pytest-3.8.1, py-1.6.0, pluggy-0.7.1 -- /root/.venvs/xbrain/bin/python
+cachedir: .pytest_cache
+rootdir: /opt/xbrain, inifile: setup.cfg
+collected 17 items                                                                                              
+
+tests/test_env.py::test_version PASSED                                                                    [  5%]
+tests/test_factory.py::test_config PASSED                                                                 [ 11%]
+tests/test_participles.py::TestJiebaParticiple::test_jieba_participle_perform_segment_empty PASSED        [ 17%]
+tests/test_participles.py::TestJiebaParticiple::test_jieba_participle_perform_segment PASSED              [ 23%]
+tests/test_participles.py::TestJiebaParticiple::test_jieba_participle_perform_segment_business_vocabs PASSED [ 29%]
+tests/test_participles.py::TestJiebaParticiple::test_jieba_participle_perform_segment_stopwords_vocabs PASSED [ 35%]
+tests/test_participles.py::TestJiebaParticiple::test_jieba_participle_best_practices PASSED               [ 41%]
+tests/test_participles.py::TestJiebaParticiple::test_jieba_participle_corpus_file PASSED                  [ 47%]
+tests/test_participles.py::TestJiebaParticiple::test_jieba_participle_corpus_dir PASSED                   [ 52%]
+tests/test_similarity.py::TestWord2VectorSimilarity::test_most_similar PASSED                             [ 58%]
+tests/test_similarity.py::TestWord2VectorSimilarityApi::test_similarity PASSED                            [ 64%]
+tests/test_word2vectors.py::TestGensimWord2Vector::test_train_model_is_not_segment PASSED                 [ 70%]
+tests/test_word2vectors.py::TestGensimWord2Vector::test_train_model_is_segment PASSED                     [ 76%]
+tests/test_word2vectors.py::TestGensimWord2Vector::test_train_model_segment_business_word_dics PASSED     [ 82%]
+tests/test_word2vectors.py::TestGensimWord2Vector::test_train_model_segment_stop_word_dics PASSED         [ 88%]
+tests/test_word2vectors.py::TestGensimWord2Vector::test_train_model_save_model PASSED                     [ 94%]
+tests/test_word2vectors.py::TestGensimWord2Vector::test_load_model PASSED                                 [100%]
+
+==================================== 17 passed, 13 warnings in 2.66 seconds =====================================
+
+# 启动服务
+(xbrain) > nohup sbin/run_server.sh &
+```
+
+
+
