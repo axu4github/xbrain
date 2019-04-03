@@ -109,5 +109,5 @@ class JiebaParticiple(Participles):
         for word in self.business_vocabularies.keys():
             jieba.add_word(word)
 
-    def perform_segment(self, sentence):
-        return jieba.cut(sentence.strip(), cut_all=False)
+    def perform_segment(self, sentence, HMM=False):
+        return jieba.cut(sentence.strip(), cut_all=False, HMM=HMM)

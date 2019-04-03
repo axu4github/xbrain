@@ -21,6 +21,19 @@ class TestGensimWord2Vector(object):
             Config.TEST_DICS_DIR, "stopwords.dic")
         cls.corpus = os.path.join(
             Config.TEST_CORPUS_DIR, "sentences.txt")
+        cls.save_model = os.path.join(
+            Config.TEST_MODELS_DIR, "w2v.model")
+
+    def test_train_large_model(self, app):
+        with app.app_context():
+            model = GensimWord2Vector().large_train(
+                self.corpus, min_count=1, batch_size=1,
+                save_model_path=self.save_model)
+
+            assert "复合时态" in model.wv.vocab
+
+            if os.path.isfile(self.save_model):
+                os.unlink(self.save_model)
 
     def test_train_model_is_not_segment(self, app):
         with app.app_context():
