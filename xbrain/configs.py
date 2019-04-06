@@ -18,6 +18,15 @@ class Config(object):
     TEST_DICS_DIR = os.path.join(TEST_RESOURCES_DIR, "dics")
     TEST_MODELS_DIR = os.path.join(TEST_RESOURCES_DIR, "models")
 
+    DEFAULT_W2V_SAVE_MODEL_PATH = os.path.join(
+        TEST_MODELS_DIR, "default_w2v.model")
+
+    DEFAULT_W2V_MODEL_SIZE = 500
+    DEFAULT_W2V_MODEL_WINDOW = 5
+    DEFAULT_W2V_MODEL_MIN_COUNT = 10
+    DEFAULT_W2V_MODEL_WORKER = 2
+    DEFAULT_W2V_MODEL_BATCH_SIZE = 100000
+
     DEBUG = False
     TESTING = False
 

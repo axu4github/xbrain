@@ -4,6 +4,7 @@ from xbrain.loggings import LoggableMixin
 from xbrain.utils import Utils
 from xbrain.doraemon import Doraemon
 from collections import defaultdict
+from xbrain.configs import Config
 
 import jieba
 
@@ -73,10 +74,12 @@ class Participles(LoggableMixin):
         if sentences is not None:
             if not isinstance(sentences, list):
                 sentences = [sentences]
-                self.logger.debug(
-                    "sentences => [{0}]".format(", ".join(sentences)))
 
-            for sentence in sentences:
+            self.logger.debug(
+                "sentences length => [{0}]".format(len(sentences)))
+            for i, sentence in enumerate(sentences):
+                self.logger.debug(
+                    "sentence index => [{0}]".format(i))
                 if "" != sentence.strip():
                     result.append(self.filter_segmented(sentence))
 
@@ -95,7 +98,7 @@ class Participles(LoggableMixin):
                     self.perform_segment_file(_file, output_file)
                     result.append(output_file)
 
-        self.logger.debug("result => [{0}]".format(", ".join(result)))
+        # self.logger.debug("result => [{0}]".format(", ".join(result)))
         return result
 
 
@@ -111,3 +114,17 @@ class JiebaParticiple(Participles):
 
     def perform_segment(self, sentence, HMM=False):
         return jieba.cut(sentence.strip(), cut_all=False, HMM=HMM)
+
+    def large_segment(self,
+                      sentences=None,
+                      workers=Config.DEFAULT_W2V_MODEL_WORKER):
+        jieba.enable_parallel(workers)
+        self.add_business_vocabularies()
+        if sentences is not None:
+            if not isinstance(sentences, list):
+                sentences = [sentences]
+
+            self.logger.debug(
+                "sentences length => [{0}]".format(len(sentences)))
+
+        return list(self.perform_segment(" ".join(sentences)))

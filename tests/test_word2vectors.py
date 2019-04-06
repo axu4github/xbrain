@@ -27,8 +27,8 @@ class TestGensimWord2Vector(object):
     def test_train_large_model(self, app):
         with app.app_context():
             model = GensimWord2Vector().large_train(
-                self.corpus, min_count=1, batch_size=1,
-                save_model_path=self.save_model)
+                self.corpus, min_count=1, batch_size=2,
+                save_model_path=self.save_model, is_segment=True)
 
             assert "复合时态" in model.wv.vocab
 
